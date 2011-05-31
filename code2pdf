@@ -1,0 +1,50 @@
+#!/usr/bin/ruby
+#
+# code2pdf
+# Created by Lucas Caton at 2011, may 31
+# Updated at 2011, may 31
+#
+
+require 'optparse'
+require 'fileutils'
+
+options = {}
+
+optparse = OptionParser.new do |opts|
+  opts.banner = "Usage:\n\ncode2pdf <project path>\n\nYou can use flags as such:"
+
+  opts.on('-h', '--help', 'Display this screen') do
+    puts opts
+    exit
+  end
+
+  if ARGV.size < 1
+    puts opts
+    exit
+  end
+end
+
+begin
+  optparse.parse!
+rescue OptionParser::InvalidOption => e
+  puts e
+  exit
+end
+
+BLACK_LIST_DIRECTORIES = ['db/migrate', 'logs', 'scripts', 'tmp', 'vendor']
+BLACK_LIST_FILES = []
+
+@code_files = []
+
+read_code ARGV[0]
+convert_to_pdf
+
+def read_code(path)
+  # loop do
+  #   @code_files << [file_name, file_content]
+  # end
+end
+
+def convert_to_pdf
+  #prawn
+end
