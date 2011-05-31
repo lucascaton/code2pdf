@@ -6,7 +6,6 @@
 #
 
 require 'optparse'
-require 'fileutils'
 
 options = {}
 
@@ -31,9 +30,9 @@ rescue OptionParser::InvalidOption => e
   exit
 end
 
-BLACK_LIST_DIRECTORIES = ['db/migrate', 'logs', 'scripts', 'tmp', 'vendor']
-BLACK_LIST_FILES = []
-PATH = ARGV[0]
+PATH = ARGV[0].gsub(/\/$/, '')
+BLACK_LIST_DIRECTORIES = ["#{PATH}/db/migrate", "#{PATH}/logs", "#{PATH}/scripts", "#{PATH}/tmp", "#{PATH}/vendor"]
+BLACK_LIST_FILES = ['.DS_Store']
 @code_files = []
 
 # Check if path exists
@@ -43,10 +42,28 @@ unless File.exists? PATH
 end
 
 # Read code files from path
-# loop do
-#   @code_files << [file_name, file_content]
-# end
+def read_code_files_from_path(path)
+  Dir.foreach path do |it|
+    path_and_name = "#{path}/#{it}"
+    if FileTest.directory?(path_and_name) && it != '.' && it != '..'
+      read_code_files_from_path path_and_name unless BLACK_LIST_DIRECTORIES.include? path_and_name
+    elsif FileTest.file?(path_and_name) && !BLACK_LIST_FILES.include?(it)
+      file = File.open(path_and_name, 'r')
+      file_content = ''
+      file.each_line { |line| file_content << line }
+      file.close
+      @code_files << [path_and_name, file_content]
+    end
+  end
+end
 
-# Convert to PDF
-File.open('out.txt', 'w') { |file| file.write('ok :)') }
+read_code_files_from_path PATH
+
+# Convert to PDF (text yet)
+final_file = ''
+@code_files.each do |file|
+  final_file << "#{file.first}\n\n#{file.last}\n\n\n"
+end
+
+File.open('out.txt', 'w') { |file| file.write(final_file) }
 #prawn
