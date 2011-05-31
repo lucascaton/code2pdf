@@ -34,8 +34,53 @@ rescue OptionParser::InvalidOption => e
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
-BLACK_LIST_DIRECTORIES = ["#{PATH}/db/migrate", "#{PATH}/logs", "#{PATH}/scripts", "#{PATH}/tmp", "#{PATH}/vendor"]
-BLACK_LIST_FILES = ['.DS_Store']
+
+BLACK_LIST_DIRECTORIES = [
+  "#{PATH}/.git",
+  "#{PATH}/db/backups",
+  "#{PATH}/db/migrate",
+  "#{PATH}/doc/api",
+  "#{PATH}/doc/app",
+  "#{PATH}/log",
+  "#{PATH}/public/applets",
+  "#{PATH}/public/flash",
+  "#{PATH}/public/flashs",
+  "#{PATH}/public/images",
+  "#{PATH}/public/javascripts/kawaii",
+  "#{PATH}/public/javascripts/vendor",
+  "#{PATH}/public/packages",
+  "#{PATH}/public/stylesheets/kawaii",
+  "#{PATH}/public/stylesheets/vendor",
+  "#{PATH}/public/system",
+  "#{PATH}/script",
+  "#{PATH}/spec",
+  "#{PATH}/tmp",
+  "#{PATH}/vendor"
+]
+
+BLACK_LIST_FILES = [
+  '.DS_Store',
+  '.eprj',
+  '.gitignore',
+  '.rspec',
+  '.rvmrc',
+  'database.yml',
+  'location.yml',
+  'nbproject',
+  'controls.js',
+  'date.js',
+  'dragdrop.js',
+  'effects.js',
+  'facebox.js',
+  'jquery-1.4.min.js',
+  'jquery.rest_in_place.js',
+  'markerlight.js',
+  'prototype.js',
+  'raphael-min.js',
+  'sorttable.js',
+  'tinybox.js'
+]
+
 @code_files = []
 
 # Check if path exists
@@ -51,6 +96,7 @@ def read_code_files_from_path(path)
     if FileTest.directory?(path_and_name) && it != '.' && it != '..'
       read_code_files_from_path path_and_name unless BLACK_LIST_DIRECTORIES.include? path_and_name
     elsif FileTest.file?(path_and_name) && !BLACK_LIST_FILES.include?(it)
+      puts "Processing => #{path_and_name}"
       file = File.open(path_and_name, 'r')
       file_content = ''
       line_number = 1
@@ -66,6 +112,7 @@ end
 read_code_files_from_path PATH
 
 # Convert to PDF
+puts "\n\nConverting to PDF..."
 filename = PATH.gsub(/(\.|\/)/, '_')
 pdf = ConvertToPDF.new "#{filename}.pdf", @code_files
 pdf.save
