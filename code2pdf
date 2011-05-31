@@ -55,7 +55,7 @@ def read_code_files_from_path(path)
       file_content = ''
       line_number = 1
       file.each_line do |line|
-        file_content << line.gsub(/^/, "<color rgb='AAAAAA'>#{line_number}</color>  "); line_number += 1
+        file_content << line.gsub(/</, '&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number}</color>  "); line_number += 1
       end
       file.close
       @code_files << ["File: <strong>#{path_and_name}</strong>", file_content]
