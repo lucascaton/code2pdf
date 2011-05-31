@@ -36,12 +36,13 @@ BLACK_LIST_FILES = []
 PATH = ARGV[0]
 @code_files = []
 
-# Read code
+# Check if path exists
 unless File.exists? PATH
   puts "'#{PATH}' path does not exist."
   exit
 end
 
+# Read code files from path
 # loop do
 #   @code_files << [file_name, file_content]
 # end
