@@ -66,5 +66,6 @@ end
 read_code_files_from_path PATH
 
 # Convert to PDF
-pdf = ConvertToPDF.new 'filename.pdf', @code_files
+filename = PATH.gsub(/(\.|\/)/, '_')
+pdf = ConvertToPDF.new "#{filename}.pdf", @code_files
 pdf.save
