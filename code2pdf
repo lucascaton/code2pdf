@@ -39,8 +39,8 @@ BLACK_LIST_FILES = ['.DS_Store']
 @code_files = []
 
 # Check if path exists
-unless File.exists? PATH
-  puts "'#{PATH}' path does not exist."
+if !File.exists?(PATH) || FileTest.file?(PATH)
+  puts "'#{PATH}' path does not exist or it is not a directory."
   exit
 end
 
