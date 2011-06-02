@@ -2,7 +2,6 @@
 #
 # code2pdf
 # Created by Lucas Caton at 2011, may 31
-# Updated at 2011, may 31
 #
 
 require 'optparse'
