@@ -45,6 +45,10 @@ The blacklist file must be a yml file, as such:
   - prototype.js
   - rails.js</code></pre>
 
+h1. PDF output example
+
+"example.pdf":https://github.com/lucascaton/code2pdf/raw/master/examples/example.pdf
+
 h1. Contributing to Lucas Caton
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
