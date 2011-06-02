@@ -1,2 +1,3 @@
 *.swp
+*.blacklist.yml
 .DS_Store

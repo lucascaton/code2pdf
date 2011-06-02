@@ -13,14 +13,14 @@ require 'convert_to_pdf'
 options = {}
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: code2pdf <project path>\n\nYou can use flags as such:"
+  opts.banner = "Usage: code2pdf <project path> <blacklist file>\n\nYou can use flags as such:"
 
   opts.on('-h', '--help', 'Display this screen') do
     puts opts
     exit
   end
 
-  if ARGV.size < 1
+  if ARGV.size < 2
     puts opts
     exit
   end
@@ -35,59 +35,32 @@ end
 
 PATH = ARGV[0].gsub(/\/$/, '')
 
-BLACK_LIST_DIRECTORIES = [
-  "#{PATH}/.git",
-  "#{PATH}/db/backups",
-  "#{PATH}/db/migrate",
-  "#{PATH}/doc/api",
-  "#{PATH}/doc/app",
-  "#{PATH}/log",
-  "#{PATH}/public/applets",
-  "#{PATH}/public/flash",
-  "#{PATH}/public/flashs",
-  "#{PATH}/public/images",
-  "#{PATH}/public/javascripts/kawaii",
-  "#{PATH}/public/javascripts/vendor",
-  "#{PATH}/public/packages",
-  "#{PATH}/public/stylesheets/kawaii",
-  "#{PATH}/public/stylesheets/vendor",
-  "#{PATH}/public/system",
-  "#{PATH}/script",
-  "#{PATH}/spec",
-  "#{PATH}/tmp",
-  "#{PATH}/vendor"
-]
-
-BLACK_LIST_FILES = [
-  '.DS_Store',
-  '.eprj',
-  '.gitignore',
-  '.rspec',
-  '.rvmrc',
-  'database.yml',
-  'location.yml',
-  'nbproject',
-  'controls.js',
-  'date.js',
-  'dragdrop.js',
-  'effects.js',
-  'facebox.js',
-  'jquery-1.4.min.js',
-  'jquery.rest_in_place.js',
-  'markerlight.js',
-  'prototype.js',
-  'raphael-min.js',
-  'sorttable.js',
-  'tinybox.js'
-]
-
-@code_files = []
-
 # Check if path exists
 if !File.exists?(PATH) || FileTest.file?(PATH)
   puts "'#{PATH}' path does not exist or it is not a directory."
   exit
 end
+
+BLACK_LIST_YML_FILE = ARGV[1]
+
+# Check if blacklist file exists
+if !File.exists?(BLACK_LIST_YML_FILE) || FileTest.directory?(BLACK_LIST_YML_FILE)
+  puts "'#{BLACK_LIST_YML_FILE}' file does not exist or it is not a regular file."
+  exit
+end
+
+BLACK_LIST = YAML.load File.read(BLACK_LIST_YML_FILE)
+
+# Check if blacklist file has directories and files keys
+if BLACK_LIST.keys != [:directories, :files]
+  puts "'#{BLACK_LIST_YML_FILE}' file has no directories and files keys."
+  exit
+end
+
+BLACK_LIST_DIRECTORIES = BLACK_LIST[:directories].map {|directory| "#{PATH}/#{directory}"}
+BLACK_LIST_FILES = BLACK_LIST[:files]
+
+@code_files = []
 
 # Read code files from path
 def read_code_files_from_path(path)
