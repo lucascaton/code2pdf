@@ -8,7 +8,7 @@
 require 'optparse'
 require 'rubygems'
 require 'prawn'
-require 'convert_to_pdf'
+require 'lib/convert_to_pdf'
 
 options = {}
 
