@@ -28,7 +28,6 @@ The blacklist file must be a yml file, as such:
   - spec
   - tmp
   - vendor
-
 :files:
   - .DS_Store
   - .eprj
