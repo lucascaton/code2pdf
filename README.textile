@@ -36,7 +36,9 @@ The blacklist file must be a yml file, as such:
   - .rspec
   - .rvmrc
   - database.yml
+  - development.sqlite3
   - application.yml
+  - favicon.ico
   - controls.js
   - dragdrop.js
   - effects.js
