@@ -16,7 +16,7 @@ Open a terminal and run:
 
 h2. BlackList file example:
 
-The blacklist file must be a yml file, as such:
+The blacklist file must be a yaml file, as such:
 <pre><code>:directories:
   - .git
   - db/migrate
