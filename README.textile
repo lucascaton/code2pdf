@@ -26,6 +26,7 @@ The blacklist file must be a yml file, as such:
   - public/system
   - script
   - spec
+  - test
   - tmp
   - vendor
 :files:
