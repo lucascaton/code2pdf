@@ -6,6 +6,7 @@
 #
 
 require 'optparse'
+require 'yaml'
 require 'rubygems'
 require 'prawn'
 require 'code2pdf/convert_to_pdf'
@@ -52,7 +53,7 @@ end
 BLACK_LIST = YAML.load File.read(BLACK_LIST_YML_FILE)
 
 # Check if blacklist file has directories and files keys
-if BLACK_LIST.keys != [:directories, :files]
+if !BLACK_LIST.keys.include?(:directories) || !BLACK_LIST.keys.include?(:files)
   puts "'#{BLACK_LIST_YML_FILE}' file has no directories and files keys."
   exit
 end
