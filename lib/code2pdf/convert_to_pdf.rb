@@ -14,7 +14,7 @@ class ConvertToPDF
         pdf.font 'Courier' do
           pdf.text file.first, :size => 12, :inline_format => true
           pdf.move_down 20
-          pdf.text file.last, :font => 'Monaco', :size => 12, :inline_format => true
+          pdf.text file.last, :size => 12, :inline_format => true
           pdf.move_down 40
         end
       end
