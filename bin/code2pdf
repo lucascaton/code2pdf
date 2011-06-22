@@ -2,12 +2,12 @@
 #
 # code2pdf
 # Created by Lucas Caton at 2011, may 31
-#
+# Forked and Edited by Victor Hugo Souza at 2011, Jun 22
 
 require 'optparse'
 require 'yaml'
 require 'rubygems'
-require 'prawn'
+require 'coderay'
 require 'code2pdf/convert_to_pdf'
 
 options = {}
@@ -70,14 +70,8 @@ def read_code_files_from_path(path)
       read_code_files_from_path path_and_name unless BLACK_LIST_DIRECTORIES.include? path_and_name
     elsif FileTest.file?(path_and_name) && !BLACK_LIST_FILES.include?(it)
       puts "Processing => #{path_and_name}"
-      file = File.open(path_and_name, 'r')
-      file_content = ''
-      line_number = 1
-      file.each_line do |line|
-        file_content << line.gsub(/</, '&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number}</color>  "); line_number += 1
-      end
-      file.close
-      @code_files << [path_and_name, file_content]
+      file = `coderay #{path_and_name}`
+      @code_files << [path_and_name, file]
     end
   end
 end
@@ -88,4 +82,4 @@ read_code_files_from_path PATH
 puts "\n\nConverting to PDF..."
 filename = PATH.gsub(/(\.|\/)/, '_')
 pdf = ConvertToPDF.new "#{filename}.pdf", @code_files
-pdf.save
+pdf.pdf

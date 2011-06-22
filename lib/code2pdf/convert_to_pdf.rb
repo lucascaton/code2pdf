@@ -1,28 +1,17 @@
 class ConvertToPDF
-
-  PDF_OPTIONS = {
-    :page_size   => 'A4'
-  }
-
   def initialize(filename, code_files)
     @filename, @code_files = filename, code_files
+    @htmlname = @filename.gsub(".pdf",".html")
   end
 
   def pdf
-    Prawn::Document.new PDF_OPTIONS do |pdf|
-      @code_files.each do |file|
-        puts "Converting to PDF => #{file.first}"
-        pdf.font 'Courier' do
-          pdf.text "File: <strong>#{file.first}</strong>", :size => 12, :inline_format => true
-          pdf.move_down 20
-          pdf.text file.last, :size => 12, :inline_format => true
-          pdf.move_down 40
-        end
+    @code_files.each do |file|
+      puts "Converting to PDF => #{file.first}"
+      File.open @htmlname, "a+" do |f|
+        f << "File: <strong>#{file.first}</strong>\n#{file.last}"
       end
     end
-  end
-
-  def save
-    pdf.render_file @filename
+    `wkhtmltopdf #{@htmlname} #{@filename}`
+    File.delete @htmlname
   end
 end
