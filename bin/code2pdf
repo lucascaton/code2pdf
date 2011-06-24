@@ -20,7 +20,7 @@ optparse = OptionParser.new do |opts|
     exit
   end
 
-  if ARGV.size < 2
+  if ARGV.size < 1
     puts opts
     exit
   end
@@ -41,7 +41,7 @@ if !File.exists?(PATH) || FileTest.file?(PATH)
   exit
 end
 
-BLACK_LIST_YML_FILE = ARGV[1]
+BLACK_LIST_YML_FILE = "#{PATH}/.code2pdf"
 
 # Check if blacklist file exists
 if !File.exists?(BLACK_LIST_YML_FILE) || FileTest.directory?(BLACK_LIST_YML_FILE)

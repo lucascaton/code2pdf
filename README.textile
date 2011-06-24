@@ -12,11 +12,12 @@ h1. Usage
 
 Open a terminal and run:
 
-<pre><code>code2pdf <project path> <blacklist file></code></pre>
+<pre><code>code2pdf <project path></code></pre>
 
 h2. BlackList file example:
 
-The blacklist file must be a yaml file, as such:
+The blacklist file must be a yaml file, named .code2pdf and it should be located in 
+<project path> root, containing a list of ignored files and/or directories, such as:
 <pre><code>:directories:
   - .git
   - db/migrate
