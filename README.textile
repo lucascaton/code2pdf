@@ -16,8 +16,7 @@ Open a terminal and run:
 
 h2. BlackList file example:
 
-The blacklist file must be a yaml file, named .code2pdf and it should be located in 
-<project path> root, containing a list of ignored files and/or directories, such as:
+The blacklist file must be a yaml file, as such:
 <pre><code>:directories:
   - .git
   - db/migrate
