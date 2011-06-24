@@ -80,7 +80,6 @@ class ConvertToPDF
   end
 
   def processing_file(file)
-    puts "Processing => #{file}"
     content = ''
     File.open(file,'r') do |f|
       f.each_line.with_index do |line_content,line_number|

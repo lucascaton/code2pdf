@@ -8,7 +8,7 @@ describe ConvertToPDF do
       pdf       = 'spec/fixtures/hello_world.pdf'
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
       ConvertToPDF.new :from => path, :to => pdf, :except => blacklist
-      Digest::MD5.hexdigest(File.read(pdf)).should eq '4d686a3170f512b47b9ddde9d65c41b1'
+      Digest::MD5.hexdigest(File.read(pdf)).should eq '269459ae6aeb1461b3d3e744e5c83844'
       File.delete(pdf)
     end
 
