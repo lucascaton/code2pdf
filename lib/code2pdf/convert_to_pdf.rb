@@ -6,25 +6,22 @@ class ConvertToPDF
 
   def initialize(params={})
     if not params.has_key?(:from) or params[:from].nil?
-      raise ArgumentError.new "where are the codes you want to convert to pdf?"
+      raise ArgumentError.new 'where are the codes you want to convert to pdf?'
     elsif not valid_directory?(params[:from])
       raise LoadError.new "#{params[:from]} not found"
     elsif not params.has_key?(:to) or params[:to].nil?
-      raise ArgumentError.new "where should I save the generated pdf file?"
+      raise ArgumentError.new 'where should I save the generated pdf file?'
     else
       @from, @to = params[:from], params[:to]
       if params.has_key?(:except)
         @except = params[:except]
-        unless valid_blacklist?
-          raise LoadError.new "#{@except} is not a valid blacklist yaml file"
-        end
+        raise LoadError.new "#{@except} is not a valid blacklist yaml file" unless valid_blacklist?
       end
       save
     end
   end
 
   private
-
   def pdf
     Prawn::Document.new PDF_OPTIONS do |pdf|
       read_files.each do |file|
