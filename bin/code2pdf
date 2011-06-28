@@ -4,23 +4,22 @@
 # Created by Lucas Caton at 2011, may 31
 #
 
-require 'optparse'
-require 'yaml'
 require 'rubygems'
-require 'prawn'
-require 'code2pdf/convert_to_pdf'
+require 'optparse'
+$:.push File.expand_path('../../lib', __FILE__)
+require 'code2pdf'
 
 options = {}
 
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: code2pdf <project path> <blacklist file>\n\nYou can use flags as such:"
+  opts.banner = "Usage: code2pdf <project path>\n\nYou can use flags as such:"
 
   opts.on('-h', '--help', 'Display this screen') do
     puts opts
     exit
   end
 
-  if ARGV.size < 2
+  if ARGV.size < 1
     puts opts
     exit
   end
@@ -34,58 +33,7 @@ rescue OptionParser::InvalidOption => e
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
-
-# Check if path exists
-if !File.exists?(PATH) || FileTest.file?(PATH)
-  puts "'#{PATH}' path does not exist or it is not a directory."
-  exit
-end
-
-BLACK_LIST_YML_FILE = ARGV[1]
-
-# Check if blacklist file exists
-if !File.exists?(BLACK_LIST_YML_FILE) || FileTest.directory?(BLACK_LIST_YML_FILE)
-  puts "'#{BLACK_LIST_YML_FILE}' file does not exist or it is not a regular file."
-  exit
-end
-
-BLACK_LIST = YAML.load File.read(BLACK_LIST_YML_FILE)
-
-# Check if blacklist file has directories and files keys
-if !BLACK_LIST.keys.include?(:directories) || !BLACK_LIST.keys.include?(:files)
-  puts "'#{BLACK_LIST_YML_FILE}' file has no directories and files keys."
-  exit
-end
-
-BLACK_LIST_DIRECTORIES = BLACK_LIST[:directories].map {|directory| "#{PATH}/#{directory}"}
-BLACK_LIST_FILES = BLACK_LIST[:files]
-
-@code_files = []
-
-# Read code files from path
-def read_code_files_from_path(path)
-  Dir.foreach path do |it|
-    path_and_name = "#{path}/#{it}"
-    if FileTest.directory?(path_and_name) && it != '.' && it != '..'
-      read_code_files_from_path path_and_name unless BLACK_LIST_DIRECTORIES.include? path_and_name
-    elsif FileTest.file?(path_and_name) && !BLACK_LIST_FILES.include?(it)
-      puts "Processing => #{path_and_name}"
-      file = File.open(path_and_name, 'r')
-      file_content = ''
-      line_number = 1
-      file.each_line do |line|
-        file_content << line.gsub(/</, '&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number}</color>  "); line_number += 1
-      end
-      file.close
-      @code_files << [path_and_name, file_content]
-    end
-  end
-end
-
-read_code_files_from_path PATH
-
+BLACK_LIST_YML_FILE = "#{PATH}/.code2pdf"
 # Convert to PDF
-puts "\n\nConverting to PDF..."
-filename = PATH.gsub(/(\.|\/)/, '_')
-pdf = ConvertToPDF.new "#{filename}.pdf", @code_files
-pdf.save
+filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
+ConvertToPDF.new :from => PATH, :to => filename, :except => BLACK_LIST_YML_FILE
