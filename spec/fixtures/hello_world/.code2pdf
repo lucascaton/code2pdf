@@ -1,0 +1,7 @@
+:directories:
+  - doc
+:files:
+  - .DS_Store
+  - .code2pdf
+  - tmp.txt
+  - gambi.rb
