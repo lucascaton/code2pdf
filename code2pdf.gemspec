@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{Convert your source code to PDF}
   s.description = %q{Convert your source code to PDF}
 
-  s.add_dependency 'prawn', '~> 0.11.1'
+  s.add_dependency 'prawn', '~> 0.12.0'
   s.add_development_dependency 'rspec'
 
   s.rubyforge_project = 'code2pdf'
