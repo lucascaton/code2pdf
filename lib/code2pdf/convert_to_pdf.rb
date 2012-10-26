@@ -1,5 +1,4 @@
 class ConvertToPDF
-
   PDF_OPTIONS = {
     :page_size   => 'A4'
   }
@@ -22,12 +21,13 @@ class ConvertToPDF
   end
 
   private
+
   def pdf
     Prawn::Document.new PDF_OPTIONS do |pdf|
       read_files.each do |file|
         puts "Converting to PDF => #{file.first}"
         pdf.font 'Courier' do
-          pdf.text "File: <strong>#{file.first}</strong>", :size => 12, :inline_format => true
+          pdf.text "<strong>File: #{file.first}</strong>", :size => 12, :inline_format => true
           pdf.move_down 20
           pdf.text file.last, :size => 12, :inline_format => true
           pdf.move_down 40
@@ -46,30 +46,38 @@ class ConvertToPDF
     @blacklist.has_key?(:directories) and @blacklist.has_key?(:files)
   end
 
-  def in_blacklist?(item)
+  def in_directory_blacklist?(item_path)
+    @blacklist[:directories].include?(item_path.gsub("#{@from}/", '')) if @blacklist
+  end
+
+  def in_file_blacklist?(item_path)
     if @blacklist
-      @blacklist[:directories].include?(item) or @blacklist[:files].include?(item)
+      @blacklist[:files].include?(item_path.split('/').last) || @blacklist[:files].include?(item_path.gsub("#{@from}/", ''))
     end
   end
 
   def valid_directory?(dir)
-    File.exists?(dir) and FileTest.directory?(dir)
+    File.exists?(dir) && FileTest.directory?(dir)
   end
 
   def valid_file?(file)
-    File.exists?(file) and FileTest.file?(file)
+    File.exists?(file) && FileTest.file?(file)
   end
 
   def read_files(path=nil)
-    @files ||= [] ; path ||= @from
+    @files ||= []
+    path ||= @from
     Dir.foreach(path) do |item|
       item_path = "#{path}/#{item}"
-      unless in_blacklist?(item)
-        if valid_directory?(item_path) and not ['.','..'].include?(item)
+
+      if valid_directory?(item_path) and not ['.', '..'].include?(item)
+        unless in_directory_blacklist?(item_path)
           read_files(item_path)
-        elsif valid_file?(item_path)
+        end
+      elsif valid_file?(item_path)
+        unless in_file_blacklist?(item_path)
           content = processing_file(item_path)
-          @files << ["File: <strong>#{item_path}</strong>", content]
+          @files << [item_path, content]
         end
       end
     end
@@ -79,9 +87,9 @@ class ConvertToPDF
   def processing_file(file)
     content = ''
     File.open(file,'r') do |f|
-      f.each_line.with_index do |line_content,line_number|
-        # TODO: this line is ugly, need find a better way ;D
-        content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number+1}</color>  ")
+      f.each_line.with_index do |line_content, line_number|
+        # FIXME: please, refactore me!
+        content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number + 1}</color>  ")
       end
     end
     content
