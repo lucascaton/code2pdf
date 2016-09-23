@@ -1,15 +1,9 @@
 #!/usr/bin/ruby
-#
-# code2pdf
-# Created by Lucas Caton at 2011, may 31
-#
 
 require 'rubygems'
 require 'optparse'
 $:.push File.expand_path('../../lib', __FILE__)
 require 'code2pdf'
-
-options = {}
 
 optparse = OptionParser.new do |opts|
   opts.banner = "Usage: code2pdf <project path>\n\nYou can use flags as such:"
@@ -33,7 +27,7 @@ rescue OptionParser::InvalidOption => e
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
-BLACK_LIST_YML_FILE = "#{PATH}/.code2pdf"
-# Convert to PDF
+BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf"
+
 filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
-ConvertToPDF.new :from => PATH, :to => filename, :except => BLACK_LIST_YML_FILE
+ConvertToPDF.new :from => PATH, :to => filename, :except => BLACK_LIST_YAML_FILE
