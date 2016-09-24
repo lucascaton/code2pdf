@@ -1,5 +1,7 @@
 # code2pdf
 
+[![Gem Version](https://badge.fury.io/rb/code2pdf.svg)](https://rubygems.org/gems/code2pdf)
+
 **code2pdf** is a simple tool for convert your source code to a PDF file.
 
 It can be useful if you need to licence you software.
