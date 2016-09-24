@@ -1,25 +1,21 @@
-$:.push File.expand_path('../lib', __FILE__)
-require 'code2pdf/version'
+require File.expand_path('../lib/code2pdf/version', __FILE__)
 
-Gem::Specification.new do |s|
-  s.name        = 'code2pdf'
-  s.version     = Code2pdf::VERSION
-  s.platform    = Gem::Platform::RUBY
-  s.authors     = %w(Lucas Caton)
-  s.homepage    = 'https://blog.lucascaton.com.br/'
-  s.summary     = 'Convert your source code to PDF'
-  s.description = 'Convert your source code to PDF'
+Gem::Specification.new do |gem|
+  gem.name                  = 'code2pdf'
+  gem.summary               = 'Convert your source code to PDF'
+  gem.description           = 'Convert your source code to PDF'
+  gem.authors               = %w(Lucas Caton)
+  gem.platform              = Gem::Platform::RUBY
+  gem.version               = Code2pdf::VERSION
+  gem.required_ruby_version = '>= 2.0.0'
+  gem.files                 = `git ls-files`.split("\n")
+  gem.test_files            = `git ls-files -- {spec}/*`.split("\n")
+  gem.executables           = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  gem.require_paths         = %w(lib)
 
-  s.add_dependency 'prawn'
-  s.add_development_dependency 'bundler'
-  s.add_development_dependency 'pry'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rspec'
-
-  s.rubyforge_project = 'code2pdf'
-
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {spec}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = %w(lib)
+  gem.add_dependency 'prawn'
+  gem.add_development_dependency 'bundler'
+  gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rspec'
 end
