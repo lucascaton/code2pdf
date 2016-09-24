@@ -15,19 +15,19 @@ optparse = OptionParser.new do |opts|
 
   if ARGV.size < 1
     puts opts
-    exit
+    exit 1
   end
 end
 
 begin
   optparse.parse!
-rescue OptionParser::InvalidOption => e
-  puts e
-  exit
+rescue OptionParser::InvalidOption => exception
+  puts exception
+  exit 1
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
 BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf"
 
 filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
-ConvertToPDF.new :from => PATH, :to => filename, :except => BLACK_LIST_YAML_FILE
+ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE
