@@ -1,6 +1,6 @@
 class ConvertToPDF
   PDF_OPTIONS = {
-    :page_size => 'A4'
+    page_size: 'A4'
   }
 
   def initialize(params={})
@@ -29,9 +29,9 @@ class ConvertToPDF
       read_files.each do |file|
         puts "Converting to PDF => #{file.first}"
         pdf.font 'Courier' do
-          pdf.text "<strong>File: #{file.first}</strong>", :size => 12, :inline_format => true
+          pdf.text "<strong>File: #{file.first}</strong>", size: 12, inline_format: true
           pdf.move_down 20
-          pdf.text file.last, :size => 12, :inline_format => true
+          pdf.text file.last, size: 12, inline_format: true
           pdf.move_down 40
         end
       end
