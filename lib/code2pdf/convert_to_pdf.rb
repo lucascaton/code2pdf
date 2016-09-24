@@ -43,7 +43,10 @@ class ConvertToPDF
   end
 
   def valid_blacklist?
-    return false if not File.exists?(@except) or FileTest.directory?(@except)
+    return false if FileTest.directory?(@except)
+
+    return true unless File.exists?(@except)
+
     @blacklist = YAML.load(File.read(@except))
     @blacklist.has_key?(:directories) && @blacklist.has_key?(:files)
   end
