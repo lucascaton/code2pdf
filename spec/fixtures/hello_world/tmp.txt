@@ -1,1 +1,1 @@
-some content that should not be included in PDF file
+sample content which should not be included in the generated PDF file

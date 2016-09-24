@@ -1,7 +1,7 @@
 module HelloWorld
   class Goodbye
     def say
-      "See ya!"
+      'See ya!'
     end
   end
 end

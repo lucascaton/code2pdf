@@ -4,11 +4,11 @@ class ConvertToPDF
   }
 
   def initialize(params={})
-    if not params.has_key?(:from) || params[:from].nil?
+    if !params.has_key?(:from) || params[:from].nil?
       raise ArgumentError.new 'where is the codebase you want to convert to PDF?'
-    elsif not valid_directory?(params[:from])
+    elsif !valid_directory?(params[:from])
       raise LoadError.new "#{params[:from]} not found"
-    elsif not params.has_key?(:to) || params[:to].nil?
+    elsif !params.has_key?(:to) || params[:to].nil?
       raise ArgumentError.new 'where should I save the generated pdf file?'
     else
       @from, @to = params[:from], params[:to]
@@ -82,6 +82,7 @@ class ConvertToPDF
         end
       end
     end
+
     @files
   end
 
@@ -89,7 +90,6 @@ class ConvertToPDF
     content = ''
     File.open(file, 'r') do |f|
       f.each_line.with_index do |line_content, line_number|
-        # OPTIMIZE
         content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number + 1}</color>  ")
       end
     end
