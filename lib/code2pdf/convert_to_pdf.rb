@@ -27,7 +27,8 @@ class ConvertToPDF
   def pdf
     Prawn::Document.new PDF_OPTIONS do |pdf|
       read_files.each do |file|
-        puts "Converting to PDF => #{file.first}"
+        puts "Converting to PDF: #{file.first}"
+
         pdf.font 'Courier' do
           pdf.text "<strong>File: #{file.first}</strong>", size: 12, inline_format: true
           pdf.move_down 20
@@ -90,10 +91,16 @@ class ConvertToPDF
   end
 
   def process_file(file)
+    puts "Reading file #{file}"
+
     content = ''
     File.open(file, 'r') do |f|
-      f.each_line.with_index do |line_content, line_number|
-        content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number + 1}</color>  ")
+      if %x(file #{file}) !~ /text/
+        content << "<color rgb='777777'>[binary]</color>"
+      else
+        f.each_line.with_index do |line_content, line_number|
+          content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number + 1}</color>  ")
+        end
       end
     end
     content
