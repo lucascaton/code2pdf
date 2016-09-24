@@ -9,7 +9,7 @@ describe ConvertToPDF do
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
 
       ConvertToPDF.new from: path, to: pdf, except: blacklist
-      Digest::MD5.hexdigest(File.read(pdf)).should eq('a8fd2fe3b1fef17f6e13972ff1623ecb')
+      expect(Digest::MD5.hexdigest(File.read(pdf))).to eq('e8c7066d59eb2097fc8900d1a8bc386b')
       File.delete(pdf)
     end
 
