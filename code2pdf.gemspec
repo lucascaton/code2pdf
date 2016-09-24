@@ -11,6 +11,9 @@ Gem::Specification.new do |s|
   s.description = 'Convert your source code to PDF'
 
   s.add_dependency 'prawn'
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'pry'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
 
   s.rubyforge_project = 'code2pdf'
