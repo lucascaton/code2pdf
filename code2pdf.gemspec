@@ -13,7 +13,9 @@ Gem::Specification.new do |gem|
   gem.executables           = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.require_paths         = %w(lib)
 
-  gem.add_dependency 'prawn'
+  gem.add_dependency 'pdfkit'
+  gem.add_dependency 'wkhtmltopdf-binary'
+  gem.add_dependency 'rouge'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'rake'
