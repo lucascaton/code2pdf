@@ -25,15 +25,14 @@ class ConvertToPDF
   private
 
   def pdf
-    @html ||= ""
-    @html = @html + "<style>#{Rouge::Themes::Base16.mode(:light).render(scope: '.highlight')}</style>"
+    @html ||= ''
     read_files.each do |file|
-      @html = @html + "<strong style='size: 12'>File: #{file.first}</strong></br>"
-      @html = @html + "#{prepare_line_breaks(syntax_highlight(file))}"
-      @html = @html + add_space(30)
+      @html += "<strong style='size: 12'>File: #{file.first}</strong></br>"
+      @html += prepare_line_breaks(syntax_highlight(file)).to_s
+      @html += add_space(30)
     end
-   @kit = PDFKit.new(@html, :page_size => 'A4')
-   @kit
+    @kit = PDFKit.new(@html, page_size: 'A4')
+    @kit
   end
 
   def syntax_highlight(file)
@@ -114,10 +113,10 @@ class ConvertToPDF
   end
 
   def prepare_line_breaks(content)
-    content.gsub(/\n/, "<br>")
+    content.gsub(/\n/, '<br>')
   end
 
-  def add_space height
+  def add_space(height)
     "<div style='margin-bottom: #{height}px'>&nbsp;</div>"
   end
 end

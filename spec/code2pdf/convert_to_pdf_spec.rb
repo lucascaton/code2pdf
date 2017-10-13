@@ -9,7 +9,8 @@ describe ConvertToPDF do
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
 
       ConvertToPDF.new from: path, to: pdf, except: blacklist
-      expect(Digest::MD5.hexdigest(File.read(pdf))).to eq('0e016c75f2da19f8ffde91a7b8099f14')
+      file_hash = '0e016c75f2da19f8ffde91a7b8099f14'
+      expect(Digest::MD5.hexdigest(File.read(pdf))).to eq(file_hash)
       File.delete(pdf)
     end
 
@@ -35,26 +36,28 @@ describe ConvertToPDF do
 
   describe '#prepare_line_breaks' do
     before do
-      @pdf = ConvertToPDF.new from: 'spec/fixtures/hello_world',
-                                                    to: 'spec/fixtures/hello_world.pdf'
+      from = 'spec/fixtures/hello_world'
+      to = 'spec/fixtures/hello_world.pdf'
+      @pdf = ConvertToPDF.new(from: from, to: to)
     end
     it 'converts strings with \n to <br> for PDF generation' do
       test_text = "test\ntest"
-      expect(@pdf.send(:prepare_line_breaks, test_text)).to eq("test<br>test")
+      expect(@pdf.send(:prepare_line_breaks, test_text)).to eq('test<br>test')
     end
   end
 
   describe '#syntax_highlight' do
     before do
-      @pdf = ConvertToPDF.new from: 'spec/fixtures/hello_world',
-                                                    to: 'spec/fixtures/hello_world.pdf'
+      from = 'spec/fixtures/hello_world'
+      to = 'spec/fixtures/hello_world.pdf'
+      @pdf = ConvertToPDF.new(from: from, to: to)
     end
-    it 'return file with syntax_highlight html clases' do
-      path = "spec/fixtures/hello_world/lib/hello.rb"
-      path_to_output = 'spec/fixtures/syntax_highlight.txt'
+    it 'returns file with syntax_highlight html clases' do
+      path = 'spec/fixtures/hello_world/lib/hello.rb'
+      output = File.read('spec/fixtures/syntax_highlight.html')
       content = @pdf.send(:process_file, path)
       file = [path, content]
-      expect(@pdf.send(:syntax_highlight, file)).to eq(File.read(path_to_output))
+      expect(@pdf.send(:syntax_highlight, file)).to eq(output)
     end
   end
 end
