@@ -1,3 +1,4 @@
 require 'yaml'
-require 'prawn'
+require 'pdfkit'
 require 'code2pdf/convert_to_pdf'
+require 'rouge'
