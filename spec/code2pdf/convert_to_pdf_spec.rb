@@ -40,6 +40,7 @@ describe ConvertToPDF do
       to = 'spec/fixtures/hello_world.pdf'
       @pdf = ConvertToPDF.new(from: from, to: to)
     end
+
     it 'converts strings with \n to <br> for PDF generation' do
       test_text = "test\ntest"
       expect(@pdf.send(:prepare_line_breaks, test_text)).to eq('test<br>test')
@@ -47,17 +48,16 @@ describe ConvertToPDF do
   end
 
   describe '#syntax_highlight' do
-    before do
-      from = 'spec/fixtures/hello_world'
-      to = 'spec/fixtures/hello_world.pdf'
-      @pdf = ConvertToPDF.new(from: from, to: to)
+    let :pdf do
+      ConvertToPDF.new from: 'spec/fixtures/hello_world', to: 'spec/fixtures/hello_world.pdf'
     end
+
     it 'returns file with syntax_highlight html clases' do
       path = 'spec/fixtures/hello_world/lib/hello.rb'
       output = File.read('spec/fixtures/syntax_highlight.html')
-      content = @pdf.send(:process_file, path)
+      content = pdf.send(:process_file, path)
       file = [path, content]
-      expect(@pdf.send(:syntax_highlight, file)).to eq(output)
+      expect(pdf.send(:syntax_highlight, file)).to eq(output)
     end
   end
 end

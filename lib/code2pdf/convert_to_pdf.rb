@@ -24,14 +24,22 @@ class ConvertToPDF
 
   private
 
+  def save
+    pdf.to_file(@to)
+  end
+
   def pdf
-    @html ||= ''
+    html ||= ''
+
+    style = 'size: 12px; font-family: Helvetica, sans-serif;'
+
     read_files.each do |file|
-      @html += "<strong style='size: 12'>File: #{file.first}</strong></br>"
-      @html += prepare_line_breaks(syntax_highlight(file)).to_s
-      @html += add_space(30)
+      html += "<strong style='#{style}'>File: #{file.first}</strong></br></br>"
+      html += prepare_line_breaks(syntax_highlight(file)).to_s
+      html += add_space(30)
     end
-    @kit = PDFKit.new(@html, page_size: 'A4')
+
+    @kit = PDFKit.new(html, page_size: 'A4')
     @kit
   end
 
@@ -39,22 +47,17 @@ class ConvertToPDF
     file_type = File.extname(file.first)[1..-1]
     file_lexer = Rouge::Lexer.find(file_type)
     return file.last unless file_lexer
+
     theme = Rouge::Themes::Base16.mode(:light)
     formatter = Rouge::Formatters::HTMLInline.new(theme)
     formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
     formatter.format(file_lexer.lex(file.last))
   end
 
-  def save
-    pdf.to_file @to
-  end
-
   def valid_blacklist?
-    return false if FileTest.directory?(@except)
+    return false if FileTest.directory?(@except) || !File.exists?(@except)
 
-    return true unless File.exists?(@except)
-
-    @blacklist = YAML.load(File.read(@except))
+    @blacklist = YAML.load_file(@except)
     @blacklist.has_key?(:directories) && @blacklist.has_key?(:files)
   end
 
@@ -83,13 +86,10 @@ class ConvertToPDF
     Dir.foreach(path) do |item|
       item_path = "#{path}/#{item}"
 
-      if valid_directory?(item_path) && !['.', '..'].include?(item)
-        read_files(item_path) unless in_directory_blacklist?(item_path)
-      elsif valid_file?(item_path)
-        unless in_file_blacklist?(item_path)
-          content = process_file(item_path)
-          @files << [item_path, content]
-        end
+      if valid_directory?(item_path) && !%w[. ..].include?(item) && !in_directory_blacklist?(item_path)
+        read_files(item_path)
+      elsif valid_file?(item_path) && !in_file_blacklist?(item_path)
+        @files << [item_path, process_file(item_path)]
       end
     end
 
