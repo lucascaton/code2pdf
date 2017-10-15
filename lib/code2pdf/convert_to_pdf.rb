@@ -25,22 +25,28 @@ class ConvertToPDF
   private
 
   def pdf
-    Prawn::Document.new PDF_OPTIONS do |pdf|
-      read_files.each do |file|
-        puts "Converting to PDF: #{file.first}"
-
-        pdf.font 'Courier' do
-          pdf.text "<strong>File: #{file.first}</strong>", size: 12, inline_format: true
-          pdf.move_down 20
-          pdf.text file.last, size: 12, inline_format: true
-          pdf.move_down 40
-        end
-      end
+    @html ||= ''
+    read_files.each do |file|
+      @html += "<strong style='size: 12'>File: #{file.first}</strong></br>"
+      @html += prepare_line_breaks(syntax_highlight(file)).to_s
+      @html += add_space(30)
     end
+    @kit = PDFKit.new(@html, page_size: 'A4')
+    @kit
+  end
+
+  def syntax_highlight(file)
+    file_type = File.extname(file.first)[1..-1]
+    file_lexer = Rouge::Lexer.find(file_type)
+    return file.last unless file_lexer
+    theme = Rouge::Themes::Base16.mode(:light)
+    formatter = Rouge::Formatters::HTMLInline.new(theme)
+    formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
+    formatter.format(file_lexer.lex(file.last))
   end
 
   def save
-    pdf.render_file @to
+    pdf.to_file @to
   end
 
   def valid_blacklist?
@@ -99,10 +105,18 @@ class ConvertToPDF
         content << "<color rgb='777777'>[binary]</color>"
       else
         f.each_line.with_index do |line_content, line_number|
-          content << line_content.gsub(/</,'&lt;').gsub(/^/, "<color rgb='AAAAAA'>#{line_number + 1}</color>  ")
+          content << line_content
         end
       end
     end
     content
+  end
+
+  def prepare_line_breaks(content)
+    content.gsub(/\n/, '<br>')
+  end
+
+  def add_space(height)
+    "<div style='margin-bottom: #{height}px'>&nbsp;</div>"
   end
 end
