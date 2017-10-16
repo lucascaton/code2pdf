@@ -11,13 +11,13 @@ describe ConvertToPDF do
     it 'creates a PDF file containing all desired source code' do
       path      = 'spec/fixtures/hello_world'
       pdf       = 'spec/fixtures/hello_world_output.pdf'
-      original = 'spec/fixtures/hello_world.pdf'
+      original = 'spec/fixtures/hello_world_original.pdf'
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
 
-      convert_to_pdf = ConvertToPDF.new from: path, to: pdf, except: blacklist
-      text_analyse = PDF::Inspector::Text.analyze(File.read("#{Dir.pwd}/#{pdf}"))
-      text_analyse_original = PDF::Inspector::Text.analyze(File.read("#{Dir.pwd}/#{original}"))
-      expect(text_analyse.strings).to eq(text_analyse_original.strings)
+      ConvertToPDF.new from: path, to: pdf, except: blacklist
+      text_analysis = read_strings("#{Dir.pwd}/#{pdf}")
+      text_analysis_original = read_strings("#{Dir.pwd}/#{original}")
+      expect(text_analysis).to eq(text_analysis_original)
       File.delete(pdf)
     end
 
@@ -65,4 +65,8 @@ describe ConvertToPDF do
       expect(pdf.send(:syntax_highlight, file)).to eq(output)
     end
   end
+end
+
+def read_strings(file)
+  PDF::Inspector::Text.analyze(File.read(file)).strings
 end
