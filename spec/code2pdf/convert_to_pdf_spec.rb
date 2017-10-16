@@ -1,16 +1,19 @@
 require 'spec_helper'
 require 'digest/md5'
+require 'pdf/inspector'
 
 describe ConvertToPDF do
   describe '#pdf' do
     it 'creates a PDF file containing all desired source code' do
       path      = 'spec/fixtures/hello_world'
-      pdf       = 'spec/fixtures/hello_world.pdf'
+      pdf       = 'spec/fixtures/hello_world_output.pdf'
+      original = 'spec/fixtures/hello_world.pdf'
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
 
-      ConvertToPDF.new from: path, to: pdf, except: blacklist
-      file_hash = '0e016c75f2da19f8ffde91a7b8099f14'
-      expect(Digest::MD5.hexdigest(File.read(pdf))).to eq(file_hash)
+      convert_to_pdf = ConvertToPDF.new from: path, to: pdf, except: blacklist
+      text_analyse = PDF::Inspector::Text.analyze(File.read("#{Dir.pwd}/#{pdf}"))
+      text_analyse_original = PDF::Inspector::Text.analyze(File.read("#{Dir.pwd}/#{original}"))
+      expect(text_analyse.strings).to eq(text_analyse_original.strings)
       File.delete(pdf)
     end
 
@@ -35,15 +38,13 @@ describe ConvertToPDF do
   end
 
   describe '#prepare_line_breaks' do
-    before do
-      from = 'spec/fixtures/hello_world'
-      to = 'spec/fixtures/hello_world.pdf'
-      @pdf = ConvertToPDF.new(from: from, to: to)
+    let :pdf do
+      ConvertToPDF.new from: 'spec/fixtures/hello_world', to: 'spec/fixtures/hello_world.pdf'
     end
 
     it 'converts strings with \n to <br> for PDF generation' do
       test_text = "test\ntest"
-      expect(@pdf.send(:prepare_line_breaks, test_text)).to eq('test<br>test')
+      expect(pdf.send(:prepare_line_breaks, test_text)).to eq('test<br>test')
     end
   end
 

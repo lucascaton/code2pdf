@@ -9,9 +9,20 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
+    Ascii85 (1.0.2)
+    afm (0.2.2)
     coderay (1.1.1)
     diff-lcs (1.2.5)
+    hashery (2.1.2)
     method_source (0.8.2)
+    pdf-inspector (1.3.0)
+      pdf-reader (>= 1.0, < 3.0.a)
+    pdf-reader (2.0.0)
+      Ascii85 (~> 1.0.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pdfkit (0.8.2)
     pry (0.10.4)
       coderay (~> 1.1.0)
@@ -32,7 +43,9 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
+    ruby-rc4 (0.1.5)
     slop (3.6.0)
+    ttfunk (1.5.1)
     wkhtmltopdf-binary (0.12.3.1)
 
 PLATFORMS
@@ -41,6 +54,7 @@ PLATFORMS
 DEPENDENCIES
   bundler
   code2pdf!
+  pdf-inspector
   pry
   rake
   rspec
