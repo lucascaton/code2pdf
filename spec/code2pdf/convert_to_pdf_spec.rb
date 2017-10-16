@@ -4,13 +4,13 @@ require 'pdf/inspector'
 
 describe ConvertToPDF do
   after do
-    pdf       = 'spec/fixtures/hello_world.pdf'
+    pdf = 'spec/fixtures/hello_world.pdf'
     File.delete(pdf) if File.exist?(pdf)
   end
   describe '#pdf' do
     it 'creates a PDF file containing all desired source code' do
-      path      = 'spec/fixtures/hello_world'
-      pdf       = 'spec/fixtures/hello_world_output.pdf'
+      path = 'spec/fixtures/hello_world'
+      pdf = 'spec/fixtures/hello_world_output.pdf'
       original = 'spec/fixtures/hello_world_original.pdf'
       blacklist = 'spec/fixtures/hello_world/.code2pdf'
 
