@@ -4,7 +4,7 @@ Gem::Specification.new do |gem|
   gem.name                  = 'code2pdf'
   gem.summary               = 'Convert your source code to PDF'
   gem.description           = 'Convert your source code to PDF'
-  gem.authors               = %w(Lucas Caton)
+  gem.authors               = ['Lucas Caton']
   gem.platform              = Gem::Platform::RUBY
   gem.version               = Code2pdf::VERSION
   gem.required_ruby_version = '>= 2.0.0'
