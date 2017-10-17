@@ -7,6 +7,7 @@ describe ConvertToPDF do
     pdf = 'spec/fixtures/hello_world.pdf'
     File.delete(pdf) if File.exist?(pdf)
   end
+
   describe '#pdf' do
     it 'creates a PDF file containing all desired source code' do
       path = 'spec/fixtures/hello_world'

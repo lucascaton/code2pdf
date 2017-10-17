@@ -3,7 +3,7 @@ class ConvertToPDF
     page_size: 'A4'
   }
 
-  def initialize(params={})
+  def initialize(params = {})
     if !params.has_key?(:from) || params[:from].nil?
       raise ArgumentError.new 'where is the codebase you want to convert to PDF?'
     elsif !valid_directory?(params[:from])
@@ -11,11 +11,10 @@ class ConvertToPDF
     elsif !params.has_key?(:to) || params[:to].nil?
       raise ArgumentError.new 'where should I save the generated pdf file?'
     else
-      @from, @to = params[:from], params[:to]
+      @from, @to, @except = params[:from], params[:to], params[:except].to_s
 
-      if params.has_key?(:except)
-        @except = params[:except]
-        raise LoadError.new "#{@except} is not a valid blacklist YAML file" unless valid_blacklist?
+      if File.exists?(@except) && invalid_blacklist?
+        raise LoadError.new "#{@except} is not a valid blacklist YAML file"
       end
 
       save
@@ -54,11 +53,12 @@ class ConvertToPDF
     formatter.format(file_lexer.lex(file.last))
   end
 
-  def valid_blacklist?
-    return false if FileTest.directory?(@except) || !File.exists?(@except)
+  def invalid_blacklist?
+    return true if FileTest.directory?(@except)
 
     @blacklist = YAML.load_file(@except)
-    @blacklist.has_key?(:directories) && @blacklist.has_key?(:files)
+
+    !@blacklist.has_key?(:directories) || !@blacklist.has_key?(:files)
   end
 
   def in_directory_blacklist?(item_path)
