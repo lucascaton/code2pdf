@@ -1,0 +1,87 @@
+//draw sky
+penColor("powderBlue");
+dot(300);
+//draw ground
+penUp();
+moveTo(0, 160);
+penDown();
+penColor("khaki");
+penWidth(5);
+for (var i = 0; i < 500; i++) {
+  drawSquare(500-i);
+}
+//draw sun
+for (var i = 0; i < 225; i++) {
+  penUp();
+  moveTo(275, 40);
+  penDown();
+  penColor("yellow");
+  dot(30);
+  penUp();
+  penDown();
+  penRGB(255, 255, 0, randomNumber(1, 3)/10);
+  penWidth(5);
+  turnTo(randomNumber(0, 360));
+  moveForward(100);
+}
+//call drawCloud
+for (var i = 0; i < 3; i++) {
+  drawCloud(randomNumber(60, 260), randomNumber(60, 100), randomNumber(10, 30));
+}
+//call drawBird
+for (var i = 0; i < 4; i++) {
+  drawBird(randomNumber(20, 25), randomNumber(0, 320), randomNumber(0, 140), randomNumber(30, 75));
+}
+//define drawSquare
+function drawSquare(sizeSquare) {
+  for (var i = 0; i < 4; i++) {
+    turnRight(90);
+    moveForward(sizeSquare);
+  }
+  turnTo(0);
+}
+//define drawCloud 
+function drawCloud(xcoordinate, ycoordinate, sizeCloud) {
+  drawCloudOutline("gray", sizeCloud, 6);
+  for (var i = 0; i < sizeCloud; i++) {
+    drawCloudOutline("white", sizeCloud-i, 4);
+  }
+  function drawCloudOutline(pencilColor, sizeCloud2, penSize) {
+    penUp();
+    moveTo(xcoordinate, ycoordinate);
+    penDown();
+    penWidth(penSize);
+    penColor(pencilColor);
+    turnTo(270);
+    moveForward(3*sizeCloud2);
+    arcRight(90, sizeCloud2);
+    arcRight(90, sizeCloud2);
+    turnTo(0);
+    arcRight(90, sizeCloud2);
+    turnTo(0);
+    arcRight(90, sizeCloud2);
+    turnTo(90);
+    arcRight(70, 1.5*sizeCloud2);
+    turnTo(100);
+    arcRight(70, 1.5*sizeCloud2);
+    turnTo(80);
+    arcRight(60, 1.3*sizeCloud2);
+    arcRight(110, 0.8*sizeCloud2);
+    turnTo(270);
+    moveForward(3*sizeCloud2);
+  }
+}
+//define drawBird
+function drawBird(birdSize, birdX, birdY, wingArc) {
+  penUp();
+  moveTo(birdX, birdY);
+  penDown();
+  penColor("black");
+  turnTo(90);
+  arcRight(wingArc, birdSize);
+  dot(birdSize/8);
+  turnTo(90-wingArc);
+  arcRight(wingArc, birdSize);
+  penUp();
+}
+hide();
