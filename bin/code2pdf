@@ -13,6 +13,12 @@ optparse = OptionParser.new do |opts|
     exit
   end
 
+  opts.on('-v', '--version', 'Display version') do
+    require 'code2pdf/version'
+    puts Code2pdf::VERSION
+    exit
+  end
+
   if ARGV.size < 1
     puts opts
     exit 1
@@ -27,7 +33,7 @@ rescue OptionParser::InvalidOption => exception
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
-BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf"
+BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf".freeze
 
 filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
 ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE

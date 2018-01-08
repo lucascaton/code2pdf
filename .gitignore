@@ -1,6 +1,4 @@
 *.blacklist.yml
 *.gem
-*.swp
-.DS_Store
 .bundle
 pkg/*

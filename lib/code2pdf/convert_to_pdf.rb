@@ -1,19 +1,19 @@
 class ConvertToPDF
   PDF_OPTIONS = {
     page_size: 'A4'
-  }
+  }.freeze
 
   def initialize(params = {})
-    if !params.has_key?(:from) || params[:from].nil?
+    if !params.key?(:from) || params[:from].nil?
       raise ArgumentError.new 'where is the codebase you want to convert to PDF?'
     elsif !valid_directory?(params[:from])
       raise LoadError.new "#{params[:from]} not found"
-    elsif !params.has_key?(:to) || params[:to].nil?
+    elsif !params.key?(:to) || params[:to].nil?
       raise ArgumentError.new 'where should I save the generated pdf file?'
     else
       @from, @to, @except = params[:from], params[:to], params[:except].to_s
 
-      if File.exists?(@except) && invalid_blacklist?
+      if File.exist?(@except) && invalid_blacklist?
         raise LoadError.new "#{@except} is not a valid blacklist YAML file"
       end
 
@@ -58,7 +58,7 @@ class ConvertToPDF
 
     @blacklist = YAML.load_file(@except)
 
-    !@blacklist.has_key?(:directories) || !@blacklist.has_key?(:files)
+    !@blacklist.key?(:directories) || !@blacklist.key?(:files)
   end
 
   def in_directory_blacklist?(item_path)
@@ -72,11 +72,11 @@ class ConvertToPDF
   end
 
   def valid_directory?(dir)
-    File.exists?(dir) && FileTest.directory?(dir)
+    File.exist?(dir) && FileTest.directory?(dir)
   end
 
   def valid_file?(file)
-    File.exists?(file) && FileTest.file?(file)
+    File.exist?(file) && FileTest.file?(file)
   end
 
   def read_files(path = nil)
@@ -101,12 +101,10 @@ class ConvertToPDF
 
     content = ''
     File.open(file, 'r') do |f|
-      if %x(file #{file}) !~ /text/
+      if `file #{file}` !~ /text/
         content << "<color rgb='777777'>[binary]</color>"
       else
-        f.each_line.with_index do |line_content, line_number|
-          content << line_content
-        end
+        f.each_line { |line_content| content << line_content }
       end
     end
     content
