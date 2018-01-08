@@ -13,6 +13,12 @@ optparse = OptionParser.new do |opts|
     exit
   end
 
+  opts.on('-v', '--version', 'Display version') do
+    require 'code2pdf/version'
+    puts Code2pdf::VERSION
+    exit
+  end
+
   if ARGV.size < 1
     puts opts
     exit 1
