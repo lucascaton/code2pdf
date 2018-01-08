@@ -10,8 +10,8 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.0.0'
   gem.files                 = `git ls-files`.split("\n")
   gem.test_files            = `git ls-files -- {spec}/*`.split("\n")
-  gem.executables           = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  gem.require_paths         = %w(lib)
+  gem.executables           = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  gem.require_paths         = %w[lib]
 
   gem.add_dependency 'pdfkit'
   gem.add_dependency 'wkhtmltopdf-binary'
