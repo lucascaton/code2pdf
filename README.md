@@ -49,4 +49,4 @@ The blacklist file must be a yaml file named `.code2pdf`, placed in project root
 
 ## Copyright
 
-Copyright © 2011-2017 Lucas Caton. See LICENSE for further details.
+Copyright © 2011-2018 Lucas Caton. See LICENSE for further details.
