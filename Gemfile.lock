@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code2pdf (0.4.1)
+    code2pdf (0.4.2)
       pdfkit
       rouge
       wkhtmltopdf-binary
