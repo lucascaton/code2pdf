@@ -37,8 +37,7 @@ class ConvertToPDF
 
     read_files.each do |file|
       html += "<strong style='#{style}'>File: #{file.first}</strong></br></br>"
-      chido = prepare_line_breaks(syntax_highlight(file)).to_s
-      html += chido
+      html += prepare_line_breaks(syntax_highlight(file)).to_s
       html += add_space(30)
     end
 
