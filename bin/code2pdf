@@ -19,7 +19,7 @@ optparse = OptionParser.new do |opts|
     exit
   end
 
-  if ARGV.size < 1
+  if ARGV.empty?
     puts opts
     exit 1
   end
