@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    code2pdf (0.4.2)
+    code2pdf (0.4.3)
       pdfkit
       rouge
       wkhtmltopdf-binary
@@ -28,7 +28,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
     rake (12.3.0)
-    rouge (3.1.0)
+    rouge (3.3.0)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -44,7 +44,7 @@ GEM
     rspec-support (3.7.0)
     ruby-rc4 (0.1.5)
     ttfunk (1.5.1)
-    wkhtmltopdf-binary (0.12.3.1)
+    wkhtmltopdf-binary (0.12.4)
 
 PLATFORMS
   ruby
@@ -58,4 +58,4 @@ DEPENDENCIES
   rspec
 
 BUNDLED WITH
-   1.16.1
+   1.17.1
