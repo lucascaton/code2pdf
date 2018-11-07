@@ -1,3 +1,6 @@
+require "cgi"
+require "shellwords"
+
 class ConvertToPDF
   PDF_OPTIONS = {
     page_size: 'A4'
@@ -45,12 +48,13 @@ class ConvertToPDF
   def syntax_highlight(file)
     file_type = File.extname(file.first)[1..-1]
     file_lexer = Rouge::Lexer.find(file_type)
-    return file.last unless file_lexer
+    return CGI::escapeHTML(file.last) unless file_lexer
 
     theme = Rouge::Themes::Base16.mode(:light)
     formatter = Rouge::Formatters::HTMLInline.new(theme)
     formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
-    formatter.format(file_lexer.lex(file.last))
+    codedata = file.last.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+    formatter.format(file_lexer.lex(codedata))
   end
 
   def invalid_blacklist?
@@ -101,8 +105,8 @@ class ConvertToPDF
 
     content = ''
     File.open(file, 'r') do |f|
-      if `file #{file}` !~ /text/
-        content << "<color rgb='777777'>[binary]</color>"
+      if `file #{Shellwords.shellescape(file)}` !~ /text/
+        content << "[binary]"
       else
         f.each_line { |line_content| content << line_content }
       end
