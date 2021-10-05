@@ -87,7 +87,7 @@ class ConvertToPDF
     @files ||= []
     path   ||= @from
 
-    Dir.foreach(path) do |item|
+    Dir.foreach(path).sort.each do |item|
       item_path = "#{path}/#{item}"
 
       if valid_directory?(item_path) && !%w[. ..].include?(item) && !in_directory_blacklist?(item_path)
