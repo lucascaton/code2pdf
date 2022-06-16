@@ -2,7 +2,7 @@
  * Some javadoc
  */
 class Example {
-    fun sum() {
+    fun sum(): Int {
         return 2 + 2
     }
 }
