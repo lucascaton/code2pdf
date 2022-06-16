@@ -46,8 +46,8 @@ class ConvertToPDF
   end
 
   def syntax_highlight(file)
-    file_type = File.extname(file.first)[1..-1]
-    file_lexer = Rouge::Lexer.find(file_type)
+    file_name = File.basename(file.first)
+    file_lexer = Rouge::Lexer.guess_by_filename(file_name)
     return CGI.escapeHTML(file.last) unless file_lexer
 
     theme = Rouge::Themes::Base16.mode(:light)
