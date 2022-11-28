@@ -14,7 +14,7 @@ class ConvertToPDF
     elsif !params.key?(:to) || params[:to].nil?
       raise ArgumentError.new 'where should I save the generated pdf file?'
     else
-      @from, @to, @except = params[:from], params[:to], params[:except].to_s
+      @from, @to, @except, @themeName = params[:from], params[:to], params[:except].to_s, params[:theme]
 
       if File.exist?(@except) && invalid_blacklist?
         raise LoadError.new "#{@except} is not a valid blacklist YAML file"
@@ -50,10 +50,16 @@ class ConvertToPDF
     file_lexer = Rouge::Lexer.find(file_type)
     return CGI.escapeHTML(file.last) unless file_lexer
 
-    theme = Rouge::Themes::Base16.mode(:light)
+    if (@themeName == "github")
+      theme = Rouge::Themes::Github.new()
+    else
+      theme = Rouge::Themes::Base16.mode(:light)
+    end
+
     formatter = Rouge::Formatters::HTMLInline.new(theme)
     formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
     code_data = file.last.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
+    puts "Processing file #{file.first}"
     formatter.format(file_lexer.lex(code_data))
   end
 

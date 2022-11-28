@@ -5,8 +5,10 @@ require 'optparse'
 $:.push File.expand_path('../../lib', __FILE__)
 require 'code2pdf'
 
+options = {:theme => 'default'}
+
 optparse = OptionParser.new do |opts|
-  opts.banner = "Usage: code2pdf <project path>\n\nYou can use flags as such:"
+  opts.banner = "Usage: code2pdf [OPTIONS] <project path>\n\nYou can use flags as such:"
 
   opts.on('-h', '--help', 'Display this screen') do
     puts opts
@@ -19,6 +21,14 @@ optparse = OptionParser.new do |opts|
     exit
   end
 
+  opts.on("-t", "--theme=github", String, "PDF Theme to use: default or github") do |t|
+    options[:theme] = t
+  end
+
+  opts.on("-f", "--from=DIR", String, "Source dir") do |f|
+    options[:from] = f
+  end
+
   if ARGV.empty?
     puts opts
     exit 1
@@ -26,14 +36,21 @@ optparse = OptionParser.new do |opts|
 end
 
 begin
-  optparse.parse!
+  rest = optparse.parse!
 rescue OptionParser::InvalidOption => exception
   puts exception
   exit 1
 end
 
-PATH = ARGV[0].gsub(/\/$/, '')
+if rest.empty? && options[:from] == nil
+  puts optparse
+  exit 1
+elsif options[:from] == nil
+  options[:from] = rest[0];
+end
+
+PATH = options[:from].gsub(/\/$/, '')
 BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf".freeze
 
 filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
-ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE
+ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE, theme: options[:theme]
