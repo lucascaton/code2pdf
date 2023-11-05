@@ -35,5 +35,5 @@ end
 PATH = ARGV[0].gsub(/\/$/, '')
 BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf".freeze
 
-filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
+filename = "code.pdf"
 ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE

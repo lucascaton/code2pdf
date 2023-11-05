@@ -33,7 +33,9 @@ class ConvertToPDF
   def pdf
     html ||= ''
 
-    style = 'size: 12px; font-family: Helvetica, sans-serif;'
+    style = 'size: 12px; font-family: Helvetica, sans-serif; font-size: 27px'
+    
+    html += "<style> .table_style { font-size: 27px } </style>"
 
     read_files.each do |file|
       html += "<strong style='#{style}'>File: #{file.first}</strong></br></br>"
@@ -41,7 +43,7 @@ class ConvertToPDF
       html += add_space(30)
     end
 
-    @kit = PDFKit.new(html, page_size: 'A4')
+    @kit = PDFKit.new(html, page_size: 'A4', margin_left: '0.3in', margin_right: '0.3in')
     @kit
   end
 
@@ -50,9 +52,9 @@ class ConvertToPDF
     file_lexer = Rouge::Lexer.find(file_type)
     return CGI.escapeHTML(file.last) unless file_lexer
 
-    theme = Rouge::Themes::Base16.mode(:light)
+    theme = Rouge::Themes::Github.new()
     formatter = Rouge::Formatters::HTMLInline.new(theme)
-    formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
+    formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1, table_class: 'table_style')
     code_data = file.last.encode('UTF-8', 'binary', invalid: :replace, undef: :replace, replace: '')
     formatter.format(file_lexer.lex(code_data))
   end
